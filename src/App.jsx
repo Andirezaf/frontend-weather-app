@@ -12,7 +12,14 @@ function App() {
   let inputKodeLokasi = useRef()
   // STATE LIST LOKASI
   let [lisLokasi,setListLokasi] = useState([])
-
+  // state detail cuaca lokasi
+  let [detailCuacaLokasi,setDetailCuacaLokasi] = useState([])
+  
+  // state detail cuaca
+  let [detailCurrentCuacaLokasi,setdetailCurrentCuacaLokasi] = useState({
+    id:'',
+    title:''
+  })
 
   // set title web
   useEffect(() => {
@@ -41,6 +48,30 @@ function App() {
       return err
     },
     retry:1
+  })
+
+  //! query get detail cuaca lokasi
+  const {isFetching:isFetchingCuacaLokasi,isFetched:isFetchedCuacaLokasi} = useQuery({
+    queryKey:['getCuacaLokasi',detailCurrentCuacaLokasi.title],
+    queryFn:()=>{
+      return fetch(`https://887c-2a09-bac5-3a07-15f-00-23-220.ngrok-free.app/api/cuaca/${detailCurrentCuacaLokasi.title}`,{
+        method:'GET',
+        headers: new Headers({
+          "ngrok-skip-browser-warning": "69420",
+        }),
+      }).then(response =>{
+        return response.json()
+      })
+    },
+    onSuccess(dataResponse){
+      setDetailCuacaLokasi(dataResponse)
+    },
+    onError(err){
+      setDetailCuacaLokasi([])
+      return err
+    },
+    retry:1,
+    enabled:detailCurrentCuacaLokasi?.id !== '' ? true : false
   })
 
   //! mutation tambah lokasi
@@ -72,14 +103,13 @@ function App() {
   const _handlePostLokasi = async (event)=>{
     event.preventDefault()
     try{
-      console.log(inputNamaLokasi.current.value)
       await mutateAsync({
         nama_kota:inputNamaLokasi.current.value,
         kode_negara:inputKodeLokasi.current.value
       })
     }
     catch(err){
-      console.log(err)
+      return err 
     }
   }
 
@@ -92,6 +122,26 @@ function App() {
           Aplikasi Cuaca
         </h2>
 
+
+        {/*//! detail lokasi */}
+        {
+          isFetchingCuacaLokasi ? <p className="text-center my-5">loading...</p>:
+          (isFetchedCuacaLokasi) && detailCuacaLokasi?.length === 0 ? <p className="text-center my-5">data tidak ditemukan</p>
+          :
+          detailCurrentCuacaLokasi?.id !== '' &&
+          [detailCuacaLokasi].map((el,i) =>{
+            return (
+              <div key={i} className="w-full my-5 p-2 text-[#344e41] ring-2 ring-[#52b788] bg-white rounded-md text-center font-semibold text-[15px]">
+                <h2 className="text-center text-xl text-[#344e41]">
+                  Detail Cuaca Untuk {el.lokasi}
+                </h2>
+                <p className="my-3 text-center text-md text-[#344e41]">Temperatur : {el.temperatur}</p>
+                <p className="my-3 text-center text-md text-[#344e41]">Kecepatan Angin : {el.kecepatan_angin}</p>
+                <p className="my-3 text-center text-md text-[#344e41]">Deskripsi : {el.deskripsi}</p>
+              </div>
+            )
+          })
+        }
         {/*//! input search */}
         <div className="relative mt-5">
             {/* inputGroup */}
@@ -122,7 +172,16 @@ function App() {
             :
             lisLokasi?.map((el)=>{
               return (
-                <button key={el.id} className="w-full  p-2 text-[#344e41] ring-2 ring-[#52b788] bg-white rounded-md text-center font-semibold text-[15px]">
+                <button key={el.id} 
+                onClick={()=>{
+                  setdetailCurrentCuacaLokasi({
+                    id:el.id,
+                    title:el.nama_kota
+                  })
+                }}
+                className={`w-full  p-2 text-[#344e41] ring-2 ring-[#52b788]  rounded-md text-center font-semibold text-[15px]
+                ${el.id == detailCurrentCuacaLokasi.id ?  'bg-[#52b788]' : 'bg-white'}
+                `}>
                 {el.nama_kota}
               </button>
               )

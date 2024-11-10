@@ -103,7 +103,7 @@ function App() {
       inputNamaLokasi.current.value = ''
       inputKodeLokasi.current.value = ''
     }
-  })  
+  })
 
   //! mutation edit lokasi
   const {mutateAsync:mutateEditLokasi,isLoading:isLoadingEditLokasi,isError:isErrorEditLokasi} = useMutation({
@@ -131,10 +131,10 @@ function App() {
         kode:''
       }))
     }
-  })  
+  })
 
 
-  //! handle post lokasi 
+  //! handle post lokasi
   const _handlePostLokasi = async (event)=>{
     event.preventDefault()
     try{
@@ -144,11 +144,11 @@ function App() {
       })
     }
     catch(err){
-      return err 
+      return err
     }
   }
 
-   //! handle edit lokasi 
+   //! handle edit lokasi
    const _handleEditLokasi = async (value)=>{
     try{
       await mutateEditLokasi({
@@ -160,7 +160,7 @@ function App() {
       })
     }
     catch(err){
-      return err 
+      return err
     }
   }
 
@@ -214,7 +214,7 @@ function App() {
                   }}
                 >
                   {
-                    isLoadingEditLokasi ? 
+                    isLoadingEditLokasi ?
                     'loading..'
                     :
                     'Submit'
@@ -227,12 +227,12 @@ function App() {
       </Dialog>
 
 
-    <section className="relative w-full h-[100vh]  overflow-x-hidden overflow-y-auto p-5 bg-[#ade8f4]/50 flex justify-center items-center">
+    <section className="relative w-full h-[100vh]  overflow-x-hidden overflow-y-auto p-5 bg-white-500/50 flex justify-center items-center">
       {/*//! container */}
       <section className="relative w-[800px] ">
         {/*//! TITLE */}
         <h2 className="text-center text-3xl text-[#344e41] font-bold">
-          Aplikasi Cuaca
+          Aplikasi Prediksi cuaca
         </h2>
 
 
@@ -244,13 +244,13 @@ function App() {
           detailCurrentCuacaLokasi?.id !== '' &&
           [detailCuacaLokasi].map((el,i) =>{
             return (
-              <div key={i} className="w-full my-5 p-2 text-[#344e41] ring-2 ring-[#52b788] bg-white rounded-md text-center font-semibold text-[15px]">
+              <div key={i} className="w-full my-5 p-2 text-[#344e41] ring-2 ring-blue-500 bg-white rounded-md text-center font-semibold text-[15px]">
                 <h2 className="text-center text-xl text-[#344e41]">
-                  Detail Cuaca Untuk {el.lokasi}  m/s
+                  Prediksi cuaca {el.lokasi}
                 </h2>
-                <p className="my-3 text-center text-md text-[#344e41]">Temperatur : {el.temperatur} <sup>0</sup>C</p>
-                <p className="my-3 text-center text-md text-[#344e41]">Kecepatan Angin : {el.kecepatan_angin} m/s</p>
                 <p className="my-3 text-center text-md text-[#344e41]">Deskripsi : {el.deskripsi}</p>
+                <p className="my-3 text-center text-md text-[#344e41]">Kecepatan Angin : {el.kecepatan_angin} m/s</p>
+                <p className="my-3 text-center text-md text-[#344e41]">Temperatur : {el.temperatur} <sup>0</sup>C</p>
               </div>
             )
           })
@@ -259,16 +259,16 @@ function App() {
         <div className="relative mt-5">
             {/* inputGroup */}
             <form onSubmit={_handlePostLokasi} action="" autoComplete="off" className="flex justify-center items-center gap-2 flex-col min-[400px]:flex-row">
-              <input type="text" 
+              <input type="text"
               ref={inputNamaLokasi}
               className="w-full relative px-3 py-2 caret-[#344e41] text-[13px] border-none outline-none rounded-md ring-1 ring-[#344e41] min-[400px]:w-auto" placeholder="Nama Lokasi" />
-              <input type="text" 
+              <input type="text"
               ref={inputKodeLokasi}
               className="w-full relative px-3 py-2 caret-[#344e41] text-[13px] border-none outline-none rounded-md ring-1 ring-[#344e41] min-[400px]:w-[60px]" placeholder="Kode Lokasi" />
 
-              <button 
+              <button
               disabled={isLoadingPostNewLokasi || isFetchingListLokasi  ? true : false}
-              className={`w-full bg-[#007f5f] text-white border-0 rounded-md font-semibold p-2 text-[13px] min-[400px]:w-auto
+              className={`w-full bg-blue-500 text-white border-0 rounded-md font-semibold p-2 text-[13px] min-[400px]:w-auto
               ${isLoadingPostNewLokasi || isFetchingListLokasi && 'opacity-50 cursor-not-allowed'}
               `}>
                 Tambah Lokasi
@@ -284,20 +284,20 @@ function App() {
             :
             lisLokasi?.map((el)=>{
               return (
-                <button key={el.id} 
+                <button key={el.id}
                 onClick={()=>{
                   setdetailCurrentCuacaLokasi({
                     id:el.id,
                     title:el.nama_kota
                   })
                 }}
-                className={`w-full  p-2 text-[#344e41] ring-2 ring-[#52b788]  rounded-md text-center font-semibold text-[15px] flex flex-row items-center
-                ${el.id == detailCurrentCuacaLokasi.id ?  'bg-[#52b788]' : 'bg-white'}
+                className={`w-full  p-2 text-[#344e41] ring-2 ring-blue-500  rounded-md text-center font-semibold text-[15px] flex flex-row items-center
+                ${el.id == detailCurrentCuacaLokasi.id ?  'bg-blue-500' : 'bg-white'}
                 `}>
                 <p className="flex-1">
                 {el.nama_kota}
                 </p>
-                <button 
+                <button
                 onClick={(event)=>{
                   event.stopPropagation()
                   setIsOpenEdit({
@@ -314,7 +314,7 @@ function App() {
               )
             })
           }
-        
+
 
         </div>
 
